@@ -1,0 +1,16 @@
+{
+  "name": "bole-render-analyse",
+  "version": "0.0.1",
+  "description": "毕设项目，基于无头浏览器的页面渲染性能分析自动化工具",
+  "scripts": {
+    "init": "npm install"
+  },
+  "dependencies": {
+    "koa": "^2.13.1",
+    "koa-body": "^4.2.0",
+    "koa-router": "^10.0.0",
+    "log4js": "^6.4.4",
+    "mysql": "^2.18.1",
+    "puppeteer": "^10.1.0"
+  }
+}
