@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "bole-render-analyse",
   "version": "0.0.1",
   "description": "毕设项目，基于无头浏览器的页面渲染性能分析自动化工具",
