@@ -7,16 +7,21 @@
 import Router from 'koa-router';
 import { logger } from '../utils/index.js';
 import fpsTaskRouter from './fpsTaskRouter.js'; 
+import shotTaskRouter from './shotTaskRouter.js';
  
 const router = new Router();
 
+let _reqId = 0;
+
 let reqLog = async (ctx, next) => {
-  let reqTime = new Date();
-  ctx.reqTime = reqTime.toLocaleString();
+  ctx.reqID = _reqId++;
+  ctx.reqTime = new Date();
+  logger.info(`[${ctx.reqID}] [request] ${ctx.method} ${ctx.url} `);
   await next();
-  logger.info(`[${ctx.reqTime}] ${ctx.method} ${ctx.url} - ${(new Date() - reqTime) / 1000} s return ${JSON.stringify(ctx.body)}`);
+  logger.info(`[${ctx.reqID}] [response] ${ctx.method} ${ctx.url} - ${(new Date() - ctx.reqTime) / 1000} s return ${JSON.stringify(ctx.body)}`);
 }
 
 router.get('/fps', reqLog, fpsTaskRouter);
+router.get('/shot', reqLog, shotTaskRouter);
  
  export default router;

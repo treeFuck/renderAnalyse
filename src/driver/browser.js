@@ -7,6 +7,7 @@
 import puppeteer from 'puppeteer';
 import { logger } from '../utils/index.js';
 import { varDriver } from '../store.js';
+import { TaskType } from './task.js';
 
 const browserArgs = {
   headless: true,
@@ -30,8 +31,10 @@ export default class MyBrowser {
   wsEndpoint = null;  // 浏览器 websocket 的地址（断开连接后方便重连）
   maxTaskNum = 5;     // 最大任务数（浏览器同时可以开启的页面数量）
   nowTaskNum = 0;     // 当前处理的任务数
+  nowTaskSet = null;  // 当前正在运行的任务
   taskArr = [];       // 待处理任务队列
   launching = false;  // 是否重启中
+  isTracing = false;  // 是否在启动 tracing（执行 fps task 时）
   
   /**
    * 初始化无头浏览器
@@ -44,6 +47,8 @@ export default class MyBrowser {
     this.maxTaskNum = Math.max(Math.min(maxTaskNum, 15), 5);
     // TODO: 任务数先控制在 5-15 个，避免闹翔
     this.nowTaskNum = 0; 
+    this.nowTaskSet = new Set();
+    this.isTracing = false;
 
     this.browser.on('disconnected', (err) => {
       logger.error('Chromium 被关闭或崩溃', err);
@@ -72,8 +77,9 @@ export default class MyBrowser {
       await this.init(this.maxTaskNum);
     }
     this.launching = false;
+    this.isTracing = false;
     // 重启后，正在执行的任务应该都丢掉了，但 taskArr 里的任务可以继续跑
-    this.taskArr.length && this.handleOneTask(this.taskArr.pop());
+    this.continueTask();
   }
 
   /**
@@ -89,31 +95,19 @@ export default class MyBrowser {
   }
 
   /**
-   * 用一个新 page 去处理一个 Task
-   * @param {Task} task 无头浏览器任务，来自 src/driver/task.js
-   */
-  async handleOneTask(task) {
-    this.nowTaskNum++;
-    const page = await this.getOnePage();
-    try {
-      await task.run(page);
-    } catch(err) {
-      logger.error(`[${task.reqTime}] task error`);
-    }
-    this.nowTaskNum--;
-    page.close();
-    // 处理完一个任务后，继续从任务队列取下一个来执行
-    this.taskArr.length && this.handleOneTask(this.taskArr.pop());
-  }
-
-  /**
    * 收到一个新任务，待处理（注意，该函数会被高并发调用，书写函数时请注意）
    * @param {Task} task 无头浏览器任务，来自 src/driver/task.js
    */
   getTask(task) {
-    // 每次有新任务进来，判断一下浏览器有没有崩，崩了则重启，并把任务都放到任务队列待处理
+    // 判断一下浏览器有没有崩，崩了则重启，并把任务都放到任务队列待处理
     if (!this.browser) {
       !this.launching && this.reLaunch();
+      this.taskArr.unshift(task);
+      return;
+    }
+
+    // fpsTask 不能并行，如果有 fpsTask 在跑，此时又来了新的 fpsTask，直接放队尾
+    if(task.type === TaskType.FPS && this.isTracing) {
       this.taskArr.unshift(task);
       return;
     }
@@ -126,7 +120,66 @@ export default class MyBrowser {
       // 非空闲，入任务队列，待处理
       this.taskArr.unshift(task);
     }
-    // logger.info(`浏览器当前处理任务数：${this.nowTaskNum}，最大同时处理任务数：${this.maxTaskNum}，待处理任务数：${this.taskArr.length}`);
+
+  }
+
+  /**
+   * 用一个新 page 去处理一个 Task
+   * @param {Task} task 无头浏览器任务，来自 src/driver/task.js
+   */
+  async handleOneTask(task) {
+    this.nowTaskNum++;
+    this.nowTaskSet.add(task);
+    if (task.type === TaskType.FPS) this.isTracing = true;
+
+    logger.info(task.type, TaskType.FPS, this.isTracing);    
+    logger.info(`浏览器当前处理任务数：${this.nowTaskNum}，最大同时处理任务数：${this.maxTaskNum}，待处理任务数：${this.taskArr.length}`);
+    logger.info(`处理中-任务队列：[${[...this.nowTaskSet].map(task=>task.type)}]`);
+    logger.info(`待处理-任务队列：[${this.taskArr.map(task=>task.type)}]`);
+    logger.info(`${this.isTracing}`)
+
+    const page = await this.getOnePage();
+    try {
+      await task.run(page);
+    } catch(err) {
+      logger.error(`[${task.reqID}] task error`);
+    }
+    await page.close();
+
+    this.nowTaskNum--;
+    this.nowTaskSet.delete(task);
+    if (task.type === TaskType.FPS) this.isTracing = false;
+    
+    // 执行完毕，继续从任务队列取新任务去执行
+    this.continueTask();
+  }
+
+  /**
+   * 继续无头浏览器任务
+   */
+  async continueTask() {
+    if(!this.taskArr.length) return;
+
+    /**
+     * @description 如果有 fpsTask 任务在执行，且 nextTask 也是 fpsTask，则从任务队列按序找出第一个非 fpsTask 的任务
+     */
+    let nextTask = this.taskArr.pop();
+    if (this.isTracing) {
+      let findTime = this.taskArr.length + 1; // 限定轮询次数，避免死循环
+      while(nextTask.type === TaskType.FPS && findTime) {
+        this.taskArr.unshift(nextTask);
+        nextTask = this.taskArr.pop();
+        findTime--;
+      }
+      if (findTime === 0) {
+        // 任务队列里全是 fpsTask，结束函数，等待上一个 fpsTask 结束后再触发执行
+        this.taskArr.unshift(nextTask);
+        return;
+      }
+    }
+
+    this.handleOneTask(nextTask);
+
   }
 
 }
