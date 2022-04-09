@@ -6,7 +6,7 @@
 
 import fs from 'fs';
 import { URL } from 'url';
-import { screenshotTask } from "../driver/task.js";
+import screenshotTask from "../task/shot/index.js";
 
 export default async function shotTaskRouter(ctx) {
 

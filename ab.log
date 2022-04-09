@@ -13,37 +13,39 @@ Server Software:
 Server Hostname:        127.0.0.1
 Server Port:            3000
 
-Document Path:          /fps
-Document Length:        38 bytes
+Document Path:          /shot
+Document Length:        37 bytes
 
-Concurrency Level:      5
-Time taken for tests:   5.464 seconds
-Complete requests:      3
+Concurrency Level:      25
+Time taken for tests:   5.123 seconds
+Complete requests:      12
 Failed requests:        0
-Total transferred:      540 bytes
-HTML transferred:       114 bytes
-Requests per second:    0.55 [#/sec] (mean)
-Time per request:       9107.433 [ms] (mean)
-Time per request:       1821.487 [ms] (mean, across all concurrent requests)
-Transfer rate:          0.10 [Kbytes/sec] received
+Total transferred:      2148 bytes
+HTML transferred:       444 bytes
+Requests per second:    2.34 [#/sec] (mean)
+Time per request:       10672.427 [ms] (mean)
+Time per request:       426.897 [ms] (mean, across all concurrent requests)
+Transfer rate:          0.41 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    0   0.2      0       1
-Processing:  1732 2473 1095.6   2844    3732
-Waiting:     1732 2473 1095.5   2843    3731
-Total:       1732 2473 1095.6   2844    3732
+Connect:        0    1   0.6      2       2
+Processing:   863 2434 753.2   2482    4260
+Waiting:      860 2433 753.4   2482    4257
+Total:        863 2435 753.2   2484    4261
+WARNING: The median and mean for the initial connection time are not within a normal deviation
+        These results are probably not that reliable.
 
 Percentage of the requests served within a certain time (ms)
-  50%   1956
-  66%   1956
-  75%   3732
-  80%   3732
-  90%   3732
-  95%   3732
-  98%   3732
-  99%   3732
- 100%   3732 (longest request)
+  50%   2484
+  66%   2518
+  75%   2614
+  80%   2614
+  90%   2647
+  95%   4261
+  98%   4261
+  99%   4261
+ 100%   4261 (longest request)
 ..done
 
 
@@ -51,34 +53,34 @@ Server Software:
 Server Hostname:        127.0.0.1
 Server Port:            3000
 
-Document Path:          /shot
-Document Length:        37 bytes
+Document Path:          /fps
+Document Length:        38 bytes
 
-Concurrency Level:      5
-Time taken for tests:   5.619 seconds
-Complete requests:      12
+Concurrency Level:      25
+Time taken for tests:   8.268 seconds
+Complete requests:      2
 Failed requests:        0
-Total transferred:      2148 bytes
-HTML transferred:       444 bytes
-Requests per second:    2.14 [#/sec] (mean)
-Time per request:       2341.440 [ms] (mean)
-Time per request:       468.288 [ms] (mean, across all concurrent requests)
-Transfer rate:          0.37 [Kbytes/sec] received
+Total transferred:      360 bytes
+HTML transferred:       76 bytes
+Requests per second:    0.24 [#/sec] (mean)
+Time per request:       103347.688 [ms] (mean)
+Time per request:       4133.908 [ms] (mean, across all concurrent requests)
+Transfer rate:          0.04 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    1   1.6      0       6
-Processing:  1283 1458 140.1   1472    1757
-Waiting:     1281 1457 139.9   1472    1755
-Total:       1283 1459 139.6   1472    1757
+Connect:        0    1   1.1      2       2
+Processing:  1268 4134 4052.7   6999    6999
+Waiting:     1266 4133 4053.7   6999    6999
+Total:       1268 4135 4053.8   7001    7001
 
 Percentage of the requests served within a certain time (ms)
-  50%   1472
-  66%   1503
-  75%   1557
-  80%   1557
-  90%   1593
-  95%   1757
-  98%   1757
-  99%   1757
- 100%   1757 (longest request)
+  50%   7001
+  66%   7001
+  75%   7001
+  80%   7001
+  90%   7001
+  95%   7001
+  98%   7001
+  99%   7001
+ 100%   7001 (longest request)

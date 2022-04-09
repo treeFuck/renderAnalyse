@@ -24,4 +24,10 @@ src
 
 
 
+## 3. 待解决问题
+
+> 跑 page.tracing api 的时候，Chromium 会崩溃，在 puppeteer 的 github 上看到有人提了这个 [issue](https://github.com/puppeteer/puppeteer/issues/8058)，可能跟 mac m1 有关，后面用云开发机试一下。
+
+
+
 

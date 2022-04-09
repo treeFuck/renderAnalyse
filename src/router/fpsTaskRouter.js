@@ -4,7 +4,9 @@
  * @date 2022-04-07
  */
 
-import { fpsTask } from "../driver/task.js";
+import fs from 'fs';
+import { URL } from 'url';
+import fpsTask from "../task/fps/index.js";
 
 export default async function fpsTaskRouter(ctx) {
 
@@ -12,12 +14,16 @@ export default async function fpsTaskRouter(ctx) {
 
     const task = new fpsTask({
       reqID: ctx.reqID,
-      url: 'https://mp.weixin.qq.com/s/FeFA06c1B6l2a624JI4nkA',
+      url: 'https://mp.weixin.qq.com/',
       sucCall: (res) => {
+        
+        const fileUrl = new URL(`../../dist/trace${parseInt(Math.random() * 20, 10)}.json`, import.meta.url);
+        fs.writeFile(fileUrl.pathname, res, err => {});
+        
         resolve({
           ret: 0,
           msg: 'success',
-          data: res
+          data: null
         });
       },
       failCall: (err) => {

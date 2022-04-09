@@ -7,10 +7,11 @@
 import puppeteer from 'puppeteer';
 import { logger } from '../utils/index.js';
 import { varDriver } from '../store.js';
-import { TaskType } from './task.js';
+import { TaskType } from '../task/task.js';
 
 const browserArgs = {
-  headless: true,
+  // executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+  headless: false,
   args: [
 		// '–disable-gpu',
 		// '–disable-dev-shm-usage',
