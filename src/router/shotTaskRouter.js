@@ -16,9 +16,17 @@ export default async function shotTaskRouter(ctx) {
       reqID: ctx.reqID,
       url: 'https://mp.weixin.qq.com/s/FeFA06c1B6l2a624JI4nkA',
       sucCall: (res) => {
-
-        const fileUrl = new URL(`../../dist/made${parseInt(Math.random() * 20, 10)}.png`, import.meta.url);
-        fs.writeFile(fileUrl.pathname, res, err => {});
+        try {
+          const fileUrl = new URL(`../../dist/made${parseInt(Math.random() * 20, 10)}.png`, import.meta.url);
+          fs.writeFile(fileUrl.pathname, res, err => {});
+          
+        } catch(err) {
+          resolve({
+            ret: -2,
+            msg: 'fail',
+            data: err
+          });
+        };
         
         resolve({
           ret: 0,

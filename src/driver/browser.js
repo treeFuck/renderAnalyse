@@ -11,7 +11,7 @@ import { TaskType } from '../task/task.js';
 
 const browserArgs = {
   // executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-  headless: false,
+  headless: true,
   args: [
 		// '–disable-gpu',
 		// '–disable-dev-shm-usage',
@@ -22,6 +22,10 @@ const browserArgs = {
 		// '–single-process'
 	]
 };
+
+// const testWSEndpoint = 'ws://127.0.0.1:9222/devtools/browser/087c1d6b-0583-43bd-ba92-ce8b753b44ba';
+const testWSEndpoint = 'ws://192.168.2.6:9222/devtools/browser/af4cef31-8b18-4193-a2c7-36c00b72292e';
+
 
 /**
  * 无头浏览器操作类
@@ -43,8 +47,12 @@ export default class MyBrowser {
    */
   async init(maxTaskNum = 5) {
     this.launching = true;
-    this.browser = await puppeteer.launch(browserArgs);
-    this.wsEndpoint = this.browser.wsEndpoint();
+    this.browser = await puppeteer.connect({
+      browserWSEndpoint: testWSEndpoint
+    });
+    this.wsEndpoint = testWSEndpoint;
+    // this.browser = await puppeteer.launch(browserArgs);
+    // this.wsEndpoint = this.browser.wsEndpoint();
     this.maxTaskNum = Math.max(Math.min(maxTaskNum, 15), 5);
     // TODO: 任务数先控制在 5-15 个，避免闹翔
     this.nowTaskNum = 0; 

@@ -14,12 +14,14 @@ export default class fpsTask extends Task {
   async run(page) {
     try {
       // TODO: 渲染完毕、读取 fps 数据，分析 fps，返回结果
-      await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36')
-      await page.waitForTimeout(3000);
-      await page.tracing.start();
+      // await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36')
+      // await page.tracing.start();
+      // await page.goto(this.url);
+      // this.success(await page.tracing.stop());
+
       await page.goto(this.url);
-      await page.waitForTimeout(3000);
-      this.success(await page.tracing.stop());
+      await page.waitForTimeout(1000);
+      this.success(null);
     } catch(err) {
       logger.error(`[${this.reqID}] fps task error:`, err);
       this.fail(err);

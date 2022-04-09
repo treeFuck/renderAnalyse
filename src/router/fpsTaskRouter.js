@@ -16,9 +16,17 @@ export default async function fpsTaskRouter(ctx) {
       reqID: ctx.reqID,
       url: 'https://mp.weixin.qq.com/',
       sucCall: (res) => {
-        
-        const fileUrl = new URL(`../../dist/trace${parseInt(Math.random() * 20, 10)}.json`, import.meta.url);
-        fs.writeFile(fileUrl.pathname, res, err => {});
+        try {
+          // const fileUrl = new URL(`../../dist/trace${parseInt(Math.random() * 20, 10)}.json`, import.meta.url);
+          // fs.writeFile(fileUrl.pathname, res, err => {});
+
+        } catch(err) {
+          resolve({
+            ret: -2,
+            msg: 'fail',
+            data: err
+          });
+        };
         
         resolve({
           ret: 0,

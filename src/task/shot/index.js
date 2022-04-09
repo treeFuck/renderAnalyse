@@ -15,9 +15,6 @@ export default class screenshotTask extends Task {
   async run(page) {
     try {
       await page.goto(this.url);
-      await page.waitForTimeout(2000);
-      // const fileUrl = new URL(`../../dist/xiuer${parseInt(Math.random() * 10, 10)}.png`, import.meta.url);
-      // await page.screenshot({path: fileUrl.pathname});
       this.success(await page.screenshot());
     } catch(err) {
       logger.error(`[${this.reqID}] screenshot task error:`, err);

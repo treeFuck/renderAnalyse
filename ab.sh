@@ -6,7 +6,7 @@
 # sh ab.sh 并发请求数(-c) 最大秒数(-t)  请求的次数(-n)
 #
 ######################################################################
-rm -rf ab.log  #清空日志
+rm -rf abtest.log  #清空日志
 for i in 'http://127.0.0.1:3000/shot' 'http://127.0.0.1:3000/fps'
 do
     if [ "$1" == "" ]
@@ -17,22 +17,22 @@ do
         if [ "$3" == "" ]
         then
             echo "并发请求数 = $1,最大秒数未赋值，请求的次数未赋值"
-            ab -c $1 $i >> ab.log &
+            ab -c $1 $i >> abtest.log &
             continue
         else
             echo "并发请求数 = $1,最大秒数未赋值，请求的次数 = $3 "
-            ab -t $2 -n $3 $i >> ab.log &
+            ab -t $2 -n $3 $i >> abtest.log &
             continue
         fi
 
     elif [[ "$3" == "" ]]
     then
         echo "并发请求数 = $1,最大秒数 = $2 ,请求的次数未赋值"
-        ab -c $1 -t $2 $i >> ab.log &
+        ab -c $1 -t $2 $i >> abtest.log &
         continue
     else
         echo "并发请求数 = $1,最大秒数 = $2 ,请求的次数 = $3 "
-        ab  -c $1 -t $2 -n $3 $i >> ab.log &
+        ab  -c $1 -t $2 -n $3 $i >> abtest.log &
         continue
     fi
 done
@@ -43,7 +43,7 @@ done
 #
 # 接收的url是i变量(从URL中读取的每行url值)
 #
-# 将结果写入ab.log日志中，& shell中是并行
+# 将结果写入abtest.log日志中，& shell中是并行
 #
 # 1 是 sh ab.sh x xx xxx第一个x的值表示并发请求数
 #
