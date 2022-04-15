@@ -23,10 +23,6 @@ const browserArgs = {
 	]
 };
 
-// const testWSEndpoint = 'ws://127.0.0.1:9222/devtools/browser/087c1d6b-0583-43bd-ba92-ce8b753b44ba';
-const testWSEndpoint = 'ws://192.168.2.6:9222/devtools/browser/af4cef31-8b18-4193-a2c7-36c00b72292e';
-
-
 /**
  * 无头浏览器操作类
  * @class MyBrowser
@@ -43,16 +39,21 @@ export default class MyBrowser {
   
   /**
    * 初始化无头浏览器
-   * @param {Number} maxTaskNum 最大任务数
+   * @param {Number} type 1 本地启动 chromium, 0 连接远程 chromium
+   * @param {Number} wSEndpoint type 为 1 时，传入远程 chromium 的 ws 地址
+   * @param {Number} maxTaskNum 最大同时执行任务数
    */
-  async init(maxTaskNum = 5) {
+  async init(type, wSEndpoint, maxTaskNum = 5) {
     this.launching = true;
-    this.browser = await puppeteer.connect({
-      browserWSEndpoint: testWSEndpoint
-    });
-    this.wsEndpoint = testWSEndpoint;
-    // this.browser = await puppeteer.launch(browserArgs);
-    // this.wsEndpoint = this.browser.wsEndpoint();
+    if (type === 0) {
+      this.browser = await puppeteer.connect({
+        browserWSEndpoint: wSEndpoint
+      });
+      this.wsEndpoint = wSEndpoint;
+    } else {
+      this.browser = await puppeteer.launch(browserArgs);
+      this.wsEndpoint = this.browser.wsEndpoint();
+    }
     this.maxTaskNum = Math.max(Math.min(maxTaskNum, 15), 5);
     // TODO: 任务数先控制在 5-15 个，避免闹翔
     this.nowTaskNum = 0; 
@@ -83,7 +84,8 @@ export default class MyBrowser {
       });
     } catch(err) {
       logger.info('Chromium 重连失败，重启中……');
-      await this.init(this.maxTaskNum);
+      // TODO: 这里重启全都是本地起 Chromium，没有远程连 Chromium，后面再补充上去
+      await this.init(1, null, this.maxTaskNum);
     }
     this.launching = false;
     this.isTracing = false;
@@ -97,9 +99,9 @@ export default class MyBrowser {
    */
   async getOnePage() {
     const page = await this.browser.newPage();
+    await page.setCacheEnabled(false); // 每个请求忽略缓存
     page.on('pageerror', (err) => logger.error('页面异常', err));
     // page.on('console', (msg) => console.log('页面 console 输出', msg.text()));
-    
     return page;
   }
 
@@ -140,12 +142,10 @@ export default class MyBrowser {
     this.nowTaskNum++;
     this.nowTaskSet.add(task);
     if (task.type === TaskType.FPS) this.isTracing = true;
-
-    logger.info(task.type, TaskType.FPS, this.isTracing);    
+  
     logger.info(`浏览器当前处理任务数：${this.nowTaskNum}，最大同时处理任务数：${this.maxTaskNum}，待处理任务数：${this.taskArr.length}`);
     logger.info(`处理中-任务队列：[${[...this.nowTaskSet].map(task=>task.type)}]`);
     logger.info(`待处理-任务队列：[${this.taskArr.map(task=>task.type)}]`);
-    logger.info(`${this.isTracing}`)
 
     const page = await this.getOnePage();
     try {

@@ -48,6 +48,24 @@ ifconfig | grep inet
 ```
 
 
+## 4. 附录
+[Puppeteer 中文文档](https://zhaoqize.github.io/puppeteer-api-zh_CN/#?product=Puppeteer&version=v13.5.0&show=api-class-puppeteer)
+
+[Chrome DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/)
+
+[chromium 启动的参数大全](https://peter.sh/experiments/chromium-command-line-switches/)
+
+[我们是如何在CI流水线统计web前端FPS的？](https://cloud.tencent.com/developer/article/1841053)
+
+[强大的可视化利器 Chrome Trace Viewer 使用详解](https://2010-2021.limboy.me/2020/03/21/chrome-trace-viewer/)
+
+[Trace Event Format](https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU/preview)
+
+[window.performance.timing 教程](https://juejin.cn/post/6864444644912103432)
+
+[MemoryInfra](https://chromium.googlesource.com/chromium/src/+/master/docs/memory-infra)
+
+
 
 
 

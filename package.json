@@ -8,6 +8,7 @@
     "dev": "rm -rf dist && mkdir dist && node src/index.js"
   },
   "dependencies": {
+    "axios": "^0.26.1",
     "koa": "^2.13.1",
     "koa-body": "^4.2.0",
     "koa-router": "^10.0.0",

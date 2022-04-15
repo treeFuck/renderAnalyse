@@ -2,3 +2,4 @@ node_modules/
 dist/
 application.log
 abtest.log
+.DS_Store

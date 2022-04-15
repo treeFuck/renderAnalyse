@@ -8,7 +8,9 @@ import { logger } from '../utils/index.js';
 
 export const TaskType = {
   FPS: 'fps',
-  SHOT: 'screenshot'
+  SHOT: 'screenshot',
+  MEMO: 'memory',
+  TIME: 'renderTime'
 }
 
 /**

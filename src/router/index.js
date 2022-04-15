@@ -8,6 +8,9 @@ import Router from 'koa-router';
 import { logger } from '../utils/index.js';
 import fpsTaskRouter from './fpsTaskRouter.js'; 
 import shotTaskRouter from './shotTaskRouter.js';
+import memoryTaskRouter from './memoryTaskRouter.js';
+import renderTimekRouter from './renderTimeRouter.js'
+// import { Driver } from '../store.js';
  
 const router = new Router();
 
@@ -23,5 +26,17 @@ let reqLog = async (ctx, next) => {
 
 router.get('/fps', reqLog, fpsTaskRouter);
 router.get('/shot', reqLog, shotTaskRouter);
+router.get('/memory', reqLog, memoryTaskRouter);
+router.get('/time', reqLog, renderTimekRouter);
+
+router.get('/test', reqLog, async (ctx)=>{
+  // const xiuer = await Driver.browser.process();
+  // console.log(xiuer);
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  ctx.body = {
+    ret: 0,
+    data: null
+  }
+});
  
  export default router;

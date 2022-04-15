@@ -4,8 +4,8 @@
  * @date 2022-04-07
  */
 
-import fs from 'fs';
-import { URL } from 'url';
+// import fs from 'fs';
+// import { URL } from 'url';
 import fpsTask from "../task/fps/index.js";
 
 export default async function fpsTaskRouter(ctx) {
@@ -14,24 +14,24 @@ export default async function fpsTaskRouter(ctx) {
 
     const task = new fpsTask({
       reqID: ctx.reqID,
-      url: 'https://mp.weixin.qq.com/',
+      url: 'http://175.178.108.248:886/animation/index.html?num=1000',
       sucCall: (res) => {
-        try {
-          // const fileUrl = new URL(`../../dist/trace${parseInt(Math.random() * 20, 10)}.json`, import.meta.url);
-          // fs.writeFile(fileUrl.pathname, res, err => {});
+        // try {
+        //   const fileUrl = new URL(`../../dist/trace${parseInt(Math.random() * 20, 10)}.json`, import.meta.url);
+        //   fs.writeFile(fileUrl.pathname, res, err => {});
 
-        } catch(err) {
-          resolve({
-            ret: -2,
-            msg: 'fail',
-            data: err
-          });
-        };
+        // } catch(err) {
+        //   resolve({
+        //     ret: -2,
+        //     msg: 'fail',
+        //     data: err
+        //   });
+        // };
         
         resolve({
           ret: 0,
           msg: 'success',
-          data: null
+          data: res
         });
       },
       failCall: (err) => {

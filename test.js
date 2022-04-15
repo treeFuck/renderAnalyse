@@ -1,16 +1,22 @@
-import { logger } from "./src/utils/index.js";
-import { URL } from 'url';
-import { cwd } from 'process';
 
-console.log(JSON.stringify({a:1}))
+import fs from 'fs';
+import generateFps from './src/task/fps/generateFps.js'
 
-let str = new URL('./dist/a.png', import.meta.url);
-console.log(str);
-console.log(`Current directory: ${cwd()}`);
+let test = async () => {
+  let data = await new Promise((resolve, reject) => {
+    fs.readFile('./trace_test.json', (err, data) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(JSON.parse(data.toString()))
+    });
+  });
 
+  
+  console.log(generateFps(data));
+  
+}
 
-logger.debug("Some debug messages");
-logger.info("Some debug messages");
-logger.warn("Some debug messages");
-logger.error("Some debug messages");
-logger.fatal("Some debug messages");
+test();
+
