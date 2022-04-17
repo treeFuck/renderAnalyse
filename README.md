@@ -3,21 +3,39 @@
 ## 1. 项目架构
 ```bash
 # tree -L 3 -l "src"
+
 src
-├── index.js [服务入口文件]
-├── store.js [全局变量文件]
+├── index.js ———————————————————— [服务入口文件]
+├── store.js ———————————————————— [全局变量文件]
 │
-├── driver [无头浏览器模块]             
-│   ├── browser.js  [无头浏览器操作 class]
-│   └── task.js     [无头浏览器任务 class]  
-│        
-├── router [服务路由模块]
-│   ├── fpsTaskRouter.js [fps 请求路由]
-│   └── index.js
+├── driver —————————————————————— [无头浏览器操作模块] 
+│   └── browser.js              
 │
-└── utils [工具类]
-    ├── mylog.js [日志输出工具]
+├── task
+|   ├── task.js                 
+│   ├── fps ————————————————————— [fps 测试模块]
+│   │   ├── generateFps.js
+│   │   └── index.js
+│   ├── memory —————————————————— [内存统计测试模块]
+│   │   ├── index.js
+│   │   └── parseMemory.js
+│   ├── shot ———————————————————— [截屏测试模块]
+│   │   └── index.js
+│   └── time ———————————————————— [首屏渲染耗时测试模块]
+│       ├── index.js
+│       └── parseTime.js
+│
+├── router —————————————————————— [服务路由模块]
+│   ├── index.js
+│   ├── fpsTaskRouter.js 
+│   ├── memoryTaskRouter.js
+│   ├── renderTimeRouter.js
+│   └── shotTaskRouter.js
+│
+└── utils ——————————————————————— [工具类]
+    ├── mylog.js 
     └── index.js
+
 ```
 
 ## 2. 使用说明
@@ -36,7 +54,8 @@ src
 2. `/time` → 统计页面首屏渲染耗时
 3. `/memory` → 统计页面内存使用情况
 
-
+> test.js 里有几个测试案例，可执行 `node test.js` 运行
+ 
 ## 3. 遇到的坑
 
 ### 3.1 M1 mac Chromium 跑 page.tracing 时崩溃 
@@ -58,6 +77,14 @@ chrome --headless --remote-debugging-port=9222 --remote-debugging-address=本机
 
 # 查询本机 ip 地址
 ifconfig | grep inet
+```
+
+### 3.1 跑 page.tracing 时没有合成器线程的 event trace 
+
+这是因为 `page.tracing.start` 在追踪页面渲染的时候，默认不抓合成器线程的 log，需要额外指定。
+```js
+// cc 就是合成器线程的缩称
+page.tracing.start({categories: ['cc']});
 ```
 
 
