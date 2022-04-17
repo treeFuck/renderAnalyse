@@ -14,7 +14,7 @@ export default async function shotTaskRouter(ctx) {
 
     const task = new screenshotTask({
       reqID: ctx.reqID,
-      url: 'https://mp.weixin.qq.com/s/FeFA06c1B6l2a624JI4nkA',
+      url: ctx.request.body.url,
       sucCall: (res) => {
         try {
           const fileUrl = new URL(`../../dist/made${parseInt(Math.random() * 20, 10)}.png`, import.meta.url);

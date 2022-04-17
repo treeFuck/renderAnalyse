@@ -22,7 +22,7 @@ let init = async () => {
   app.use(koaBody());
   app.use(router.routes()).use(router.allowedMethods());
   
-  app.listen(3001, () => {
+  app.listen(3000, () => {
     console.log('请访问: http://127.0.0.1:3000/fps');
   })
 };

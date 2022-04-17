@@ -16,7 +16,7 @@ const router = new Router();
 
 let _reqId = 0;
 
-let reqLog = async (ctx, next) => {
+const reqLog = async (ctx, next) => {
   ctx.reqID = _reqId++;
   ctx.reqTime = new Date();
   logger.info(`[${ctx.reqID}] [request] ${ctx.method} ${ctx.url} `);
@@ -24,14 +24,21 @@ let reqLog = async (ctx, next) => {
   logger.info(`[${ctx.reqID}] [response] ${ctx.method} ${ctx.url} - ${(new Date() - ctx.reqTime) / 1000} s return ${JSON.stringify(ctx.body)}`);
 }
 
-router.get('/fps', reqLog, fpsTaskRouter);
-router.get('/shot', reqLog, shotTaskRouter);
-router.get('/memory', reqLog, memoryTaskRouter);
-router.get('/time', reqLog, renderTimekRouter);
+const filter = async (ctx, next) => {
+  const url = ctx.request.body.url;
+  if (!url) {
+    ctx.body = { ret: -1, msg: 'url 不能为空', data: null };
+  } else {
+    await next();
+  }
+}
 
-router.get('/test', reqLog, async (ctx)=>{
-  // const xiuer = await Driver.browser.process();
-  // console.log(xiuer);
+router.post('/fps', reqLog, filter, fpsTaskRouter);
+router.post('/memory', reqLog,filter, memoryTaskRouter);
+router.post('/time', reqLog, filter, renderTimekRouter);
+router.post('/shot', reqLog, filter, shotTaskRouter);
+
+router.get('/test', reqLog, filter, async (ctx) => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
   ctx.body = {
     ret: 0,

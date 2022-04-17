@@ -14,7 +14,7 @@ export default async function fpsTaskRouter(ctx) {
 
     const task = new fpsTask({
       reqID: ctx.reqID,
-      url: 'http://175.178.108.248:886/animation/index.html?num=1000',
+      url: ctx.request.body.url,
       sucCall: (res) => {
         // try {
         //   const fileUrl = new URL(`../../dist/trace${parseInt(Math.random() * 20, 10)}.json`, import.meta.url);

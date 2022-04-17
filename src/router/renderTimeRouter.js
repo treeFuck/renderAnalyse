@@ -12,7 +12,7 @@ export default async function renderTimekRouter(ctx) {
 
     const task = new renderTimeTask({
       reqID: ctx.reqID,
-      url: 'http://175.178.108.248:886/homepage.html',
+      url:  ctx.request.body.url,
       sucCall: (res) => {
         resolve({
           ret: 0,

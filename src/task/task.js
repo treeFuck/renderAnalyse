@@ -44,7 +44,6 @@ export class Task {
     } catch (err) {
       logger.error(`[${this.reqID}] task error:`, err);
       this.fail(err);
-
     }
   }
 };

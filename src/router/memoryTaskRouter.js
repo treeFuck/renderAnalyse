@@ -7,17 +7,15 @@
 import memoryTask from "../task/memory/index.js";
 
 export default async function memoryTaskRouter(ctx) {
-
   ctx.body = await new Promise((resolve) => {
-
     const task = new memoryTask({
       reqID: ctx.reqID,
-      url: 'https://mp.weixin.qq.com/s/FeFA06c1B6l2a624JI4nkA',
+      url: ctx.request.body.url,
       sucCall: (res) => {
         resolve({
           ret: 0,
           msg: 'success',
-          data: null
+          data: res
         });
       },
       failCall: (err) => {
@@ -30,7 +28,5 @@ export default async function memoryTaskRouter(ctx) {
     });
     
     task.popTask();
-
   });
-
 }

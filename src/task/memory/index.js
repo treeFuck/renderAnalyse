@@ -6,6 +6,7 @@
 
 import { logger } from '../../utils/index.js';
 import { Task, TaskType } from '../task.js';
+import parseMemory from './parseMemory.js'
 
 export default class memoryTask extends Task {
   constructor({ reqID, url, sucCall, failCall }) {
@@ -15,7 +16,8 @@ export default class memoryTask extends Task {
   async run(page) {
     try {
       await page.goto(this.url);
-      this.success(await page.metrics());
+      const res = parseMemory(await page.metrics());
+      this.success(res);
     } catch(err) {
       logger.error(`[${this.reqID}] memory task error:`, err);
       this.fail(err);

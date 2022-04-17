@@ -14,19 +14,26 @@ export default class fpsTask extends Task {
 
   async run(page) {
     try {
-      // TODO: 渲染完毕、读取 fps 数据，分析 fps，返回结果
-      // await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36')
-      await page.goto(this.url);
-      await page.tracing.start({
-        categories: ['cc', 'memory']
-      });
-      await await page.waitForTimeout(3000);
-      const traceData = JSON.parse((await page.tracing.stop()).toString());
-      this.success(generateFps(traceData));
-
       // await page.goto(this.url);
-      // await page.waitForTimeout(1000);
-      // this.success(null);
+      // await page.tracing.start({categories: ['cc', 'memory']});
+      // await await page.waitForTimeout(3000);
+      // const traceData = JSON.parse((await page.tracing.stop()).toString());
+      // this.success(generateFps(traceData));
+
+      await page.goto(this.url);
+      await page.evaluate(() => {
+        let start = new Date();
+        let renderTime = 0;
+        let fun = () => {
+          renderTime++;
+          renderTime % 10 === 0 && ( window._FPS_ = renderTime / ((new Date() - start) / 1000));
+          window.requestAnimationFrame(fun);
+        };
+        fun();
+      });
+      await page.waitForTimeout(2000);
+      this.success((await page.evaluate(() => window._FPS_)).toFixed(2));
+
     } catch(err) {
       logger.error(`[${this.reqID}] fps task error:`, err);
       this.fail(err);
