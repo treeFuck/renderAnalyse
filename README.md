@@ -53,9 +53,11 @@ src
 1. `/fps` → 统计页面动画渲染流畅度
 2. `/time` → 统计页面首屏渲染耗时
 3. `/memory` → 统计页面内存使用情况
+4. `/shot` → 给页面截个图
+
 
 > test.js 里有几个测试案例，可执行 `node test.js` 运行
- 
+
 ## 3. 遇到的坑
 
 ### 3.1 M1 mac Chromium 跑 page.tracing 时崩溃 
